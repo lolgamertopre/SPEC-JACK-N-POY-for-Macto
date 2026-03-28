@@ -20,5 +20,41 @@
         <hr>
         <p id="resultText">Result: Waiting for move...</p>
     </div>
+    <script>
+    // 1. Create variables to keep track of the score
+    let pScore = 0;
+    let cScore = 0;
+
+    // 2. This function runs every time you click a button
+    function play(playerChoice) {
+        const choices = ['Rock', 'Paper', 'Scissors'];
+        
+        // 3. Make the computer pick a random move
+        // Math.random() picks a number between 0 and 1, we turn that into 0, 1, or 2
+        const computerChoice = choices[Math.floor(Math.random() * 3)];
+        
+        let result = "";
+
+        // 4. Check who won
+        if (playerChoice === computerChoice) {
+            result = "It's a tie!";
+        } else if (
+            (playerChoice === 'Rock' && computerChoice === 'Scissors') ||
+            (playerChoice === 'Paper' && computerChoice === 'Rock') ||
+            (playerChoice === 'Scissors' && computerChoice === 'Paper')
+        ) {
+            result = "You win!";
+            pScore++; // Increase player score
+        } else {
+            result = "Computer wins!";
+            cScore++; // Increase computer score
+        }
+
+        // 5. Update the text on the screen
+        document.getElementById('resultText').innerText = `Result: ${result} (CPU chose ${computerChoice})`;
+        document.getElementById('playerScore').innerText = pScore;
+        document.getElementById('computerScore').innerText =      cScore;
+    }
+</script>
 </body>
 </html> 
