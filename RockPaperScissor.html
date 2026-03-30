@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
+    <style>
+        /* I added a little bit of Full Block CSS so it looks good on your wallpaper */
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+            margin: 0;
+            padding-bottom: 30px;
+            color: white;
+            background-color: transparent; /* Allows your Linux wallpaper to show */
+        }
+        .scoreboard {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        button {
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
 </head>
 <body>
     <h1>Rock Paper Scissors Game</h1>
@@ -19,23 +45,21 @@
         <p>Computer: <span id="computerScore">0</span></p>
         <hr>
         <p id="resultText">Result: Waiting for move...</p>
+        
+        <button onclick="resetGame()" class="reset-btn">Reset Score</button>
     </div>
+
+    <audio id="fahAudio" src="fah.mp3"></audio>
+
     <script>
-    // 1. Create variables to keep track of the score
     let pScore = 0;
     let cScore = 0;
 
-    // 2. This function runs every time you click a button
     function play(playerChoice) {
         const choices = ['Rock', 'Paper', 'Scissors'];
-        
-        // 3. Make the computer pick a random move
-        // Math.random() picks a number between 0 and 1, we turn that into 0, 1, or 2
         const computerChoice = choices[Math.floor(Math.random() * 3)];
-        
         let result = "";
 
-        // 4. Check who won
         if (playerChoice === computerChoice) {
             result = "It's a tie!";
         } else if (
@@ -44,17 +68,27 @@
             (playerChoice === 'Scissors' && computerChoice === 'Paper')
         ) {
             result = "You win!";
-            pScore++; // Increase player score
+            pScore++;
         } else {
             result = "Computer wins!";
-            cScore++; // Increase computer score
+            cScore++;
+            // This plays your 'Fahhh' sound on failure
+            document.getElementById('fahAudio').play();
         }
 
-        // 5. Update the text on the screen
         document.getElementById('resultText').innerText = `Result: ${result} (CPU chose ${computerChoice})`;
         document.getElementById('playerScore').innerText = pScore;
-        document.getElementById('computerScore').innerText =      cScore;
+        document.getElementById('computerScore').innerText = cScore;
     }
-</script>
+
+    // NEW: This logic makes the Reset button work
+    function resetGame() {
+        pScore = 0;
+        cScore = 0;
+        document.getElementById('playerScore').innerText = '0';
+        document.getElementById('computerScore').innerText = '0';
+        document.getElementById('resultText').innerText = 'Game Reset. Waiting...';
+    }
+    </script>
 </body>
-</html> 
+</html>
