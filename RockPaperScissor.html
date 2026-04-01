@@ -1,94 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
-    <style>
-        /* I added a little bit of Full Block CSS so it looks good on your wallpaper */
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            height: 100vh;
-            margin: 0;
-            padding-bottom: 30px;
-            color: white;
-            background-color: transparent; /* Allows your Linux wallpaper to show */
-        }
-        .scoreboard {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        button {
-            cursor: pointer;
-            padding: 10px;
-            margin: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Rock Paper Scissors Game</h1>
 
-    <div>
-        <button onclick="play('Rock')">Rock</button>
-        <button onclick="play('Paper')">Paper</button>
-        <button onclick="play('Scissors')">Scissors</button>
+  <h1>Rock Paper Scissors</h1>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="play('Rock')">
+      <span class="emoji">✊</span>ROCK
+    </button>
+    <button class="choice-btn" onclick="play('Paper')">
+      <span class="emoji">🖐</span>PAPER
+    </button>
+    <button class="choice-btn" onclick="play('Scissors')">
+      <span class="emoji">✌️</span>SCISSORS
+    </button>
+  </div>
+
+  <div class="scoreboard">
+    <div class="scores">
+      <div class="score-block">
+        <div class="score-label">Player</div>
+        <div class="score-value" id="playerScore">0</div>
+      </div>
+      <div class="score-block">
+        <div class="score-label">CPU</div>
+        <div class="score-value" id="computerScore">0</div>
+      </div>
     </div>
+    <div class="divider"></div>
+    <p id="resultText">Make your move...</p>
+    <button class="reset-btn" onclick="resetGame()">Reset Score</button>
+  </div>
 
-    <div class="scoreboard">
-        <p>Player: <span id="playerScore">0</span></p>
-        <p>Computer: <span id="computerScore">0</span></p>
-        <hr>
-        <p id="resultText">Result: Waiting for move...</p>
-        
-        <button onclick="resetGame()" class="reset-btn">Reset Score</button>
-    </div>
+  <audio id="fahAudio" src="fah.mp3"></audio>
+  <script src="game.js"></script>
 
-    <audio id="fahAudio" src="fah.mp3"></audio>
-
-    <script>
-    let pScore = 0;
-    let cScore = 0;
-
-    function play(playerChoice) {
-        const choices = ['Rock', 'Paper', 'Scissors'];
-        const computerChoice = choices[Math.floor(Math.random() * 3)];
-        let result = "";
-
-        if (playerChoice === computerChoice) {
-            result = "It's a tie!";
-        } else if (
-            (playerChoice === 'Rock' && computerChoice === 'Scissors') ||
-            (playerChoice === 'Paper' && computerChoice === 'Rock') ||
-            (playerChoice === 'Scissors' && computerChoice === 'Paper')
-        ) {
-            result = "You win!";
-            pScore++;
-        } else {
-            result = "Computer wins!";
-            cScore++;
-            // This plays your 'Fahhh' sound on failure
-            document.getElementById('fahAudio').play();
-        }
-
-        document.getElementById('resultText').innerText = `Result: ${result} (CPU chose ${computerChoice})`;
-        document.getElementById('playerScore').innerText = pScore;
-        document.getElementById('computerScore').innerText = cScore;
-    }
-
-    // NEW: This logic makes the Reset button work
-    function resetGame() {
-        pScore = 0;
-        cScore = 0;
-        document.getElementById('playerScore').innerText = '0';
-        document.getElementById('computerScore').innerText = '0';
-        document.getElementById('resultText').innerText = 'Game Reset. Waiting...';
-    }
-    </script>
 </body>
 </html>
