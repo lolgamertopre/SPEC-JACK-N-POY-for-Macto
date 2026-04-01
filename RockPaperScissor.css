@@ -1,0 +1,12 @@
+:root {
+  --bg: transparent;
+  --panel: rgba(8, 8, 18, 0.78);
+  --panel-border: rgba(255, 255, 255, 0.07);
+  --accent: #e8ff47;
+  --accent-dim: rgba(232, 255, 71, 0.12);
+  --red: #ff4747;
+  --red-dim: rgba(255, 71, 71, 0.12);
+  --white: #f0f0f0;
+  --muted: rgba(240, 240, 240, 0.45);
+  --radius: 16px;
+}
