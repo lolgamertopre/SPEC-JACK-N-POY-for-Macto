@@ -23,3 +23,9 @@ function unlockAudio() {
   audio.play().then(() => { audio.pause(); audio.currentTime = 0; }).catch(() => {});
   audioUnlocked = true;
 }
+function playFah() {
+  const audio = document.getElementById('fahAudio');
+  if (!audio) return;
+  audio.currentTime = 0;
+  audio.play().catch(() => {});
+}
