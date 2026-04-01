@@ -25,3 +25,4 @@ h1 {
   text-shadow: 0 0 28px rgba(232,255,71,0.35);
   margin-bottom: 22px;
 }
+.choices { display: flex; gap: 14px; margin-bottom: 20px; }
