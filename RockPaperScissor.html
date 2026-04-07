@@ -3,13 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple Rock Paper Scissors game">
+  <meta name="author" content="Your Name">
   <title>Rock Paper Scissors</title>
+  <link rel="preload" href="RockPaperScissor.css" as="style">
+  <link rel="preload" href="RockPaperScissor.js" as="script">
   <link rel="stylesheet" href="RockPaperScissor.css">
 </head>
 <body>
 
+  <!-- Game Title -->
   <h1>Rock Paper Scissors</h1>
 
+  <!-- Player Choice Buttons -->
   <div class="choices">
     <button class="choice-btn" onclick="play('Rock')">
       <span class="emoji">✊</span>ROCK
@@ -22,6 +28,7 @@
     </button>
   </div>
 
+  <!-- Scoreboard Section -->
   <div class="scoreboard">
     <div class="scores">
       <div class="score-block">
@@ -37,7 +44,15 @@
     <p id="resultText">Make your move...</p>
     <button class="reset-btn" onclick="resetGame()">Reset Score</button>
   </div>
-<audio id="fahAudio" src="fah.mp3" preload="auto"></audio>
+
+  <!-- Audio Effect -->
+  <audio id="fahAudio" src="fah.mp3" preload="auto"></audio>
+
+  <!-- Fallback if JavaScript is disabled -->
+  <noscript>Please enable JavaScript to play.</noscript>
+
+  <span hidden>version 1.0</span>
+
   <script src="RockPaperScissor.js"></script>
 
 </body>
