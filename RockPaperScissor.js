@@ -5,68 +5,96 @@ const WINS    = { Rock: 'Scissors', Paper: 'Rock', Scissors: 'Paper' };
 let pScore = 0, cScore = 0;
 let audioUnlocked = false;
 
+// Cache DOM elements (faster & cleaner)
+const pEl = document.getElementById('playerScore');
+const cEl = document.getElementById('computerScore');
+const resultEl = document.getElementById('resultText');
+const audio = document.getElementById('fahAudio');
+
+// Unlock audio once
 function unlockAudio() {
-  if (audioUnlocked) return;
-  const audio = document.getElementById('fahAudio');
-  audio.play().then(() => { audio.pause(); audio.currentTime = 0; }).catch(() => {});
-  audioUnlocked = true;
+  if (audioUnlocked || !audio) return;
+  audio.play()
+    .then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+      audioUnlocked = true;
+    })
+    .catch(() => {});
 }
 
+// Flash animation
 function flash(el, type) {
   el.classList.remove('flash-win', 'flash-lose');
-  void el.offsetWidth;
+  void el.offsetWidth; // force reflow
   el.classList.add(type === 'win' ? 'flash-win' : 'flash-lose');
-  setTimeout(() => el.classList.remove('flash-win', 'flash-lose'), 600);
+
+  setTimeout(() => {
+    el.classList.remove('flash-win', 'flash-lose');
+  }, 600);
 }
 
+// Show result
 function showResult(text, type) {
-  const el = document.getElementById('resultText');
-  el.className = type + ' result-pop';
-  el.textContent = text;
-  el.addEventListener('animationend', () => el.classList.remove('result-pop'), { once: true });
+  resultEl.className = `${type} result-pop`;
+  resultEl.textContent = text;
+
+  resultEl.addEventListener(
+    'animationend',
+    () => resultEl.classList.remove('result-pop'),
+    { once: true }
+  );
 }
 
+// Play lose sound
 function playFah() {
-  const audio = document.getElementById('fahAudio');
   if (!audio) return;
   audio.currentTime = 0;
   audio.play().catch(() => {});
 }
 
+// Get random choice (cleaner)
+function getCPUChoice() {
+  return CHOICES[Math.floor(Math.random() * CHOICES.length)];
+}
+
+// Main game
 function play(playerChoice) {
   unlockAudio();
 
-  const cpu = CHOICES[Math.floor(Math.random() * 3)];
-  const pEl = document.getElementById('playerScore');
-  const cEl = document.getElementById('computerScore');
+  const cpu = getCPUChoice();
 
   if (playerChoice === cpu) {
-    showResult(`TIE — both picked ${EMOJIS[cpu]} ${cpu}`, 'tie');
+    showResult(`TIE — ${EMOJIS[cpu]} ${cpu}`, 'tie');
+    return;
+  }
 
-  } else if (WINS[playerChoice] === cpu) {
+  if (WINS[playerChoice] === cpu) {
     pScore++;
     pEl.textContent = pScore;
     flash(pEl, 'win');
-    showResult(`YOU WIN — ${EMOJIS[playerChoice]} beats ${EMOJIS[cpu]} ${cpu}`, 'win');
-
+    showResult(`YOU WIN — ${EMOJIS[playerChoice]} beats ${EMOJIS[cpu]}`, 'win');
   } else {
     cScore++;
     cEl.textContent = cScore;
     flash(cEl, 'lose');
-    showResult(`CPU WINS — ${EMOJIS[cpu]} ${cpu} beats ${EMOJIS[playerChoice]}`, 'lose');
+    showResult(`CPU WINS — ${EMOJIS[cpu]} beats ${EMOJIS[playerChoice]}`, 'lose');
     playFah();
   }
 }
 
+// Reset game
 function resetGame() {
-  pScore = cScore = 0;
-  document.getElementById('playerScore').textContent  = '0';
-  document.getElementById('computerScore').textContent = '0';
+  pScore = 0;
+  cScore = 0;
+
+  pEl.textContent = '0';
+  cEl.textContent = '0';
+
   showResult('GAME RESET — MAKE YOUR MOVE', '');
 }
 
-// Pre-load the audio as soon as the page is ready
+// Preload audio
 window.addEventListener('load', () => {
-  const audio = document.getElementById('fahAudio');
   if (audio) audio.load();
 });
