@@ -4,14 +4,16 @@ const WINS    = { Rock: 'Scissors', Paper: 'Rock', Scissors: 'Paper' };
 
 let pScore = 0, cScore = 0;
 let audioUnlocked = false;
+let gameOver = false;
+const MAX_SCORE = 5; // ⭐ first to 5 wins
 
-// Cache DOM elements (faster & cleaner)
+// Cache DOM
 const pEl = document.getElementById('playerScore');
 const cEl = document.getElementById('computerScore');
 const resultEl = document.getElementById('resultText');
 const audio = document.getElementById('fahAudio');
 
-// Unlock audio once
+// Unlock audio
 function unlockAudio() {
   if (audioUnlocked || !audio) return;
   audio.play()
@@ -23,10 +25,10 @@ function unlockAudio() {
     .catch(() => {});
 }
 
-// Flash animation
+// Flash effect
 function flash(el, type) {
   el.classList.remove('flash-win', 'flash-lose');
-  void el.offsetWidth; // force reflow
+  void el.offsetWidth;
   el.classList.add(type === 'win' ? 'flash-win' : 'flash-lose');
 
   setTimeout(() => {
@@ -46,51 +48,80 @@ function showResult(text, type) {
   );
 }
 
-// Play lose sound
+// Sound
 function playFah() {
   if (!audio) return;
   audio.currentTime = 0;
   audio.play().catch(() => {});
 }
 
-// Get random choice (cleaner)
+// Random CPU
 function getCPUChoice() {
   return CHOICES[Math.floor(Math.random() * CHOICES.length)];
 }
 
-// Main game
-function play(playerChoice) {
-  unlockAudio();
+// Disable buttons (optional but nice UX)
+function setButtonsDisabled(disabled) {
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = disabled;
+  });
+}
 
-  const cpu = getCPUChoice();
+// Check winner
+function checkGameOver() {
+  if (pScore === MAX_SCORE || cScore === MAX_SCORE) {
+    gameOver = true;
+    setButtonsDisabled(true);
 
-  if (playerChoice === cpu) {
-    showResult(`TIE — ${EMOJIS[cpu]} ${cpu}`, 'tie');
-    return;
-  }
-
-  if (WINS[playerChoice] === cpu) {
-    pScore++;
-    pEl.textContent = pScore;
-    flash(pEl, 'win');
-    showResult(`YOU WIN — ${EMOJIS[playerChoice]} beats ${EMOJIS[cpu]}`, 'win');
-  } else {
-    cScore++;
-    cEl.textContent = cScore;
-    flash(cEl, 'lose');
-    showResult(`CPU WINS — ${EMOJIS[cpu]} beats ${EMOJIS[playerChoice]}`, 'lose');
-    playFah();
+    if (pScore > cScore) {
+      showResult('🎉 YOU WON THE GAME!', 'win');
+    } else {
+      showResult('💀 CPU WON THE GAME!', 'lose');
+    }
   }
 }
 
-// Reset game
+// Main game
+function play(playerChoice) {
+  if (gameOver) return;
+
+  unlockAudio();
+  setButtonsDisabled(true); // prevent spam clicking
+
+  const cpu = getCPUChoice();
+
+  setTimeout(() => {
+    if (playerChoice === cpu) {
+      showResult(`TIE — ${EMOJIS[cpu]} ${cpu}`, 'tie');
+    } else if (WINS[playerChoice] === cpu) {
+      pScore++;
+      pEl.textContent = pScore;
+      flash(pEl, 'win');
+      showResult(`YOU WIN — ${EMOJIS[playerChoice]} beats ${EMOJIS[cpu]}`, 'win');
+    } else {
+      cScore++;
+      cEl.textContent = cScore;
+      flash(cEl, 'lose');
+      showResult(`CPU WINS — ${EMOJIS[cpu]} beats ${EMOJIS[playerChoice]}`, 'lose');
+      playFah();
+    }
+
+    checkGameOver();
+    if (!gameOver) setButtonsDisabled(false);
+
+  }, 400); // small delay = nicer feel
+}
+
+// Reset
 function resetGame() {
   pScore = 0;
   cScore = 0;
+  gameOver = false;
 
   pEl.textContent = '0';
   cEl.textContent = '0';
 
+  setButtonsDisabled(false);
   showResult('GAME RESET — MAKE YOUR MOVE', '');
 }
 
