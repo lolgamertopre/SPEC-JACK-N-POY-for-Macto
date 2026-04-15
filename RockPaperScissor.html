@@ -7,8 +7,10 @@
   <meta name="author" content="Your Name">
   <title>Rock Paper Scissors</title>
   <link rel="preload" href="RockPaperScissor.css" as="style">
-  <link rel="preload" href="RockPaperScissor.js" as="script">
   <link rel="stylesheet" href="RockPaperScissor.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap');
+  </style>
 </head>
 <body>
 
@@ -17,13 +19,13 @@
 
   <!-- Player Choice Buttons -->
   <div class="choices">
-    <button class="choice-btn" onclick="play('Rock')">
+    <button class="choice-btn" data-choice="Rock">
       <span class="emoji">✊</span>ROCK
     </button>
-    <button class="choice-btn" onclick="play('Paper')">
+    <button class="choice-btn" data-choice="Paper">
       <span class="emoji">🖐</span>PAPER
     </button>
-    <button class="choice-btn" onclick="play('Scissors')">
+    <button class="choice-btn" data-choice="Scissors">
       <span class="emoji">✌️</span>SCISSORS
     </button>
   </div>
@@ -42,11 +44,11 @@
     </div>
     <div class="divider"></div>
     <p id="resultText">Make your move...</p>
-    <button class="reset-btn" onclick="resetGame()">Reset Score</button>
+    <button class="reset-btn" id="resetBtn">Reset Score</button>
   </div>
 
   <!-- Audio Effect -->
-  <audio id="fahAudio" src="fah.mp3" preload="auto"></audio>
+  <audio id="fahAudio" preload="auto"></audio>
 
   <!-- Fallback if JavaScript is disabled -->
   <noscript>Please enable JavaScript to play.</noscript>

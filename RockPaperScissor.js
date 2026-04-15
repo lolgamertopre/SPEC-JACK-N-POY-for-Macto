@@ -3,26 +3,24 @@ const EMOJIS  = { Rock: '✊', Paper: '🖐', Scissors: '✌️' };
 const WINS    = { Rock: 'Scissors', Paper: 'Rock', Scissors: 'Paper' };
 
 const MAX_SCORE    = 5;
-const DELAY_MS     = 500;  // ✅ one place to tune the round delay
-const RESET_MS     = 3000; // ✅ one place to tune the auto-reset delay
+const DELAY_MS     = 500;
+const RESET_MS     = 3000;
 
 let pScore     = 0;
 let cScore     = 0;
-let roundCount = 0; // ✅ track total rounds played
+let roundCount = 0;
 let audioUnlocked = false;
 let gameOver      = false;
 let isAnimating   = false;
-let resetTimer    = null; // ✅ so we can cancel auto-reset if needed
+let resetTimer    = null;
 
-// ── Cache DOM ────────────────────────────────────────────
 const pEl      = document.getElementById('playerScore');
 const cEl      = document.getElementById('computerScore');
 const resultEl = document.getElementById('resultText');
-const roundEl  = document.getElementById('roundCount'); // ✅ optional round counter element
+const resetBtn = document.getElementById('resetBtn');
 const audio    = document.getElementById('fahAudio');
 const buttons  = document.querySelectorAll('.choice-btn');
 
-// ── Audio ────────────────────────────────────────────────
 function unlockAudio() {
   if (audioUnlocked || !audio) return;
   audio.play()
@@ -30,14 +28,12 @@ function unlockAudio() {
     .catch(() => {});
 }
 
-function playSound(id = 'fahAudio') {
-  const sfx = id === 'fahAudio' ? audio : document.getElementById(id);
-  if (!sfx) return;
-  sfx.currentTime = 0;
-  sfx.play().catch(() => {});
+function playSound() {
+  if (!audio || !audioUnlocked) return;
+  audio.currentTime = 0;
+  audio.play().catch(() => {});
 }
 
-// ── UI Helpers ───────────────────────────────────────────
 function setButtonsDisabled(state) {
   buttons.forEach(btn => (btn.disabled = state));
 }
@@ -50,7 +46,7 @@ function flash(el, type) {
 }
 
 function showResult(text, type) {
-  resultEl.className = (type ? `${type} ` : '') + 'result-pop'; // ✅ cleaner class build
+  resultEl.className = (type ? `${type} ` : '') + 'result-pop';
   resultEl.textContent = text;
   resultEl.addEventListener(
     'animationend',
@@ -69,17 +65,10 @@ function clearHighlight() {
   buttons.forEach(btn => btn.classList.remove('active-choice'));
 }
 
-// ✅ Update round counter display
-function updateRoundDisplay() {
-  if (roundEl) roundEl.textContent = roundCount;
-}
-
-// ── CPU ──────────────────────────────────────────────────
 function getCPUChoice() {
   return CHOICES[Math.floor(Math.random() * CHOICES.length)];
 }
 
-// ── Score ────────────────────────────────────────────────
 function updateScore(winner) {
   if (winner === 'player') {
     pEl.textContent = ++pScore;
@@ -90,15 +79,12 @@ function updateScore(winner) {
   }
 }
 
-// ── Determine Round Result ───────────────────────────────
-// ✅ Pure function — easy to unit test
 function getRoundResult(player, cpu) {
   if (player === cpu)          return 'tie';
   if (WINS[player] === cpu)    return 'win';
   return 'lose';
 }
 
-// ── Game Over ────────────────────────────────────────────
 function checkGameOver() {
   if (pScore < MAX_SCORE && cScore < MAX_SCORE) return false;
 
@@ -108,17 +94,15 @@ function checkGameOver() {
   const playerWon = pScore >= MAX_SCORE;
   showResult(
     playerWon
-      ? `🎉 YOU WON! (${roundCount} rounds)`   // ✅ show rounds in end screen
+      ? `🎉 YOU WON! (${roundCount} rounds)`
       : `💀 CPU WON! (${roundCount} rounds)`,
     playerWon ? 'win' : 'lose'
   );
 
-  // ✅ Store timer ref so resetGame() can clear it
   resetTimer = setTimeout(resetGame, RESET_MS);
   return true;
 }
 
-// ── Main Play ────────────────────────────────────────────
 function play(playerChoice) {
   if (gameOver || isAnimating) return;
 
@@ -128,14 +112,13 @@ function play(playerChoice) {
   highlightChoice(playerChoice);
 
   const cpu    = getCPUChoice();
-  const result = getRoundResult(playerChoice, cpu); // ✅ resolved early, used below
+  const result = getRoundResult(playerChoice, cpu);
 
   showResult(`${EMOJIS[playerChoice]} vs ${EMOJIS[cpu]} …`, 'tie');
 
   setTimeout(() => {
     clearHighlight();
-    roundCount++;           // ✅ increment after each completed round
-    updateRoundDisplay();
+    roundCount++;
 
     if (result === 'tie') {
       showResult(`TIE — ${EMOJIS[cpu]} ${cpu}`, 'tie');
@@ -147,7 +130,7 @@ function play(playerChoice) {
     } else {
       updateScore('cpu');
       showResult(`CPU WINS — ${EMOJIS[cpu]} beats ${EMOJIS[playerChoice]}`, 'lose');
-      playSound('fahAudio');
+      playSound();
     }
 
     isAnimating = false;
@@ -156,10 +139,11 @@ function play(playerChoice) {
   }, DELAY_MS);
 }
 
-// ── Reset ────────────────────────────────────────────────
 function resetGame() {
-  // ✅ Cancel pending auto-reset if player resets manually
-  if (resetTimer) { clearTimeout(resetTimer); resetTimer = null; }
+  if (resetTimer) { 
+    clearTimeout(resetTimer); 
+    resetTimer = null; 
+  }
 
   pScore     = 0;
   cScore     = 0;
@@ -169,14 +153,18 @@ function resetGame() {
 
   pEl.textContent = '0';
   cEl.textContent = '0';
-  updateRoundDisplay();
 
   clearHighlight();
   setButtonsDisabled(false);
   showResult('GAME RESET — MAKE YOUR MOVE ✊🖐✌️', '');
 }
 
-// ── Init ─────────────────────────────────────────────────
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => play(btn.dataset.choice));
+});
+
+resetBtn.addEventListener('click', resetGame);
+
 window.addEventListener('load', () => {
   if (audio) audio.load();
 });
