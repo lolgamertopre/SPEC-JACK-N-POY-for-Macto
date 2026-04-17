@@ -56,7 +56,9 @@ h1 {
 .choice-btn:hover  { border-color: var(--accent); background: rgba(232,255,71,0.12); box-shadow: 0 0 22px rgba(232,255,71,0.18); transform: translateY(-4px); }
 .choice-btn:hover .emoji { transform: scale(1.22) rotate(-6deg); }
 .choice-btn:active { transform: scale(0.96); }
- 
+.choice-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+.choice-btn.active-choice { border-color: var(--accent); background: rgba(232,255,71,0.15); }
+
 /* --- Scoreboard --- */
 .scoreboard {
   background: var(--panel);
@@ -70,6 +72,7 @@ h1 {
 }
  
 .scores       { display: flex; justify-content: center; gap: 32px; margin-bottom: 16px; }
+.score-block  { text-align: center; }
 .score-label  { font-size: 0.65rem; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; }
 .score-value  { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: 1; transition: color 0.3s, text-shadow 0.3s; }
  
@@ -109,4 +112,3 @@ h1 {
 }
  
 .result-pop { animation: pop 0.28s cubic-bezier(.34,1.56,.64,1) forwards; }
- 
