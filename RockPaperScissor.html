@@ -3,57 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A simple Rock Paper Scissors game">
-  <meta name="author" content="Your Name">
   <title>Rock Paper Scissors</title>
-  <link rel="preload" href="RockPaperScissor.css" as="style">
-  <link rel="preload" href="RockPaperScissor.js" as="script">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="RockPaperScissor.css">
 </head>
 <body>
+  <div class="bg-grid"></div>
+  <div class="bg-orb"></div>
 
-  <!-- Game Title -->
   <h1>Rock Paper Scissors</h1>
+  <div class="subtitle">First to 5 wins · Press R, P, or S</div>
 
-  <!-- Player Choice Buttons -->
   <div class="choices">
-    <button class="choice-btn" onclick="play('Rock')">
-      <span class="emoji">✊</span>ROCK
+    <button class="choice-btn" onclick="play('Rock')" data-choice="Rock">
+      <span class="emoji">✊</span>ROCK<span class="key-hint">[R]</span>
     </button>
-    <button class="choice-btn" onclick="play('Paper')">
-      <span class="emoji">🖐</span>PAPER
+    <button class="choice-btn" onclick="play('Paper')" data-choice="Paper">
+      <span class="emoji">🖐</span>PAPER<span class="key-hint">[P]</span>
     </button>
-    <button class="choice-btn" onclick="play('Scissors')">
-      <span class="emoji">✌️</span>SCISSORS
+    <button class="choice-btn" onclick="play('Scissors')" data-choice="Scissors">
+      <span class="emoji">✌️</span>SCISSORS<span class="key-hint">[S]</span>
     </button>
   </div>
 
-  <!-- Scoreboard Section -->
   <div class="scoreboard">
+    <!-- ✅ Game-over overlay (lives inside scoreboard for backdrop blur) -->
+    <div class="gameover-overlay" id="gameoverOverlay">
+      <div class="gameover-title" id="gameoverTitle"></div>
+      <div class="gameover-sub"  id="gameoverSub"></div>
+    </div>
+
     <div class="scores">
       <div class="score-block">
-        <div class="score-label">Player</div>
+        <div class="score-label">You</div>
         <div class="score-value" id="playerScore">0</div>
       </div>
+      <div class="score-sep">:</div>
       <div class="score-block">
         <div class="score-label">CPU</div>
         <div class="score-value" id="computerScore">0</div>
       </div>
     </div>
+
+    <!-- ✅ Progress bar toward MAX_SCORE -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <!-- ✅ Streak badge (populated by JS) -->
+    <div class="streak-row" id="streakRow"></div>
+
     <div class="divider"></div>
-    <p id="resultText">Make your move...</p>
-    <button class="reset-btn" onclick="resetGame()">Reset Score</button>
+    <p id="resultText">Make your move…</p>
+    <button class="reset-btn" onclick="resetGame()">↺ Reset</button>
   </div>
 
-  <!-- Audio Effect -->
   <audio id="fahAudio" src="fah.mp3" preload="auto"></audio>
-
-  <!-- Fallback if JavaScript is disabled -->
   <noscript>Please enable JavaScript to play.</noscript>
-
-  <span hidden>version 1.0</span>
-
   <script src="RockPaperScissor.js"></script>
-
 </body>
 </html>
